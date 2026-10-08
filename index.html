@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pratyush Aman | Scientific ML &amp; Nonlinear Dynamics</title>
+<meta name="description" content="Pratyush Aman builds physics-informed machine learning models and studies burst oscillations in chemically fueled supramolecular systems.">
+<meta name="theme-color" content="#0B0A1E">
+<meta property="og:title" content="Pratyush Aman | Scientific ML &amp; Nonlinear Dynamics">
+<meta property="og:description" content="Systems that burst, lock, and refuse to settle. Physics-informed ML and nonlinear dynamics.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B0A1E'/%3E%3Cpath d='M8 52 Q20 10 30 52 T52 52 T70 52 Q80 8 92 52' fill='none' stroke='%238B5CF6' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+  :root{
+    --ink:#0B0A1E; --panel:rgba(23,18,58,.55); --paper:#F3EFFC; --paper-dim:#C6BEE6; --muted:#948DC0;
+    --accent:#8B5CF6; --accent-2:#38BDF8; --accent-warm:#E879F9; --hairline:rgba(243,239,252,.12);
+    --grad:linear-gradient(120deg,var(--accent-2),var(--accent) 55%,var(--accent-warm));
+    --max:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:76px}
+  body{
+    margin:0;color:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:17px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(800px 520px at 10% -6%,rgba(56,189,248,.17),transparent 60%),
+      radial-gradient(860px 560px at 92% 4%,rgba(139,92,246,.22),transparent 60%),
+      var(--ink);
+  }
+  body::before{ /* faint graph-paper dots */
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:radial-gradient(rgba(243,239,252,.09) 1px,transparent 1px);
+    background-size:28px 28px;
+    -webkit-mask-image:linear-gradient(to bottom,#000,transparent 70%);mask-image:linear-gradient(to bottom,#000,transparent 70%);
+  }
+  a{color:var(--accent-2);text-decoration:none;transition:color .2s}
+  a:hover{color:var(--accent-warm)}
+  a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px}
+  .serif{font-family:'Fraunces',serif}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+  section{padding:96px 0}
+  h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,4.4vw,48px);line-height:1.1;letter-spacing:-.02em;margin:0 0 16px}
+  h2 em,h1 em{font-style:italic;font-weight:400;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--paper-dim);max-width:60ch;margin:0 0 44px;font-size:18px}
+  p{margin:0 0 16px}
+
+  /* reveal */
+  .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .js .reveal.in{opacity:1;transform:none}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:20;background:rgba(11,10,30,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--hairline)}
+  .nav .wrap{display:flex;align-items:center;gap:30px;height:62px}
+  .brand{font-family:'Fraunces',serif;font-size:22px;color:var(--paper);margin-right:auto}
+  .brand span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:26px;font-size:15px}
+  .nav-links a{color:var(--paper-dim)}.nav-links a:hover{color:var(--paper)}
+  .pill{display:inline-block;padding:9px 18px;border-radius:999px;font-size:15px;font-weight:500;color:var(--paper);
+    border:1px solid transparent;background:linear-gradient(var(--ink),var(--ink)) padding-box,var(--grad) border-box;transition:transform .2s}
+  .pill:hover{color:var(--paper);transform:translateY(-1px)}
+  .pill.solid{background:var(--grad);color:#0B0A1E;font-weight:600}
+  .pill.solid:hover{color:#0B0A1E}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  /* hero */
+  .hero{padding:84px 0 56px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:56px;align-items:center}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:44px}}
+  .status{display:inline-flex;align-items:center;gap:10px;font-size:14.5px;color:var(--paper-dim);border:1px solid var(--hairline);border-radius:999px;padding:6px 14px;margin-bottom:28px}
+  .status i{width:8px;height:8px;border-radius:50%;background:#34D399;box-shadow:0 0 0 4px rgba(52,211,153,.18)}
+  .hero h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(44px,6.6vw,96px);line-height:.98;letter-spacing:-.03em;margin:0 0 28px;max-width:11ch}
+  .hero .lead{font-size:clamp(18px,2vw,21px);color:var(--paper-dim);max-width:56ch;margin-bottom:34px}
+  .cta{display:flex;flex-wrap:wrap;gap:14px}
+
+  /* portrait */
+  .portrait{position:relative;margin:0 auto;width:100%;max-width:380px;aspect-ratio:4/5}
+  @media(max-width:900px){.portrait{max-width:300px}}
+  .orbit{position:absolute;border-radius:50%;aspect-ratio:1;z-index:0;pointer-events:none}
+  .orbit.o1{width:132%;left:-16%;top:50%;margin-top:-66%;border:1px dashed rgba(56,189,248,.38);animation:spin 28s linear infinite}
+  .orbit.o2{width:156%;left:-28%;top:50%;margin-top:-78%;border:1px dashed rgba(232,121,249,.26);animation:spin 44s linear infinite reverse}
+  .orbit::after{content:"";position:absolute;top:-5px;left:50%;margin-left:-5px;width:10px;height:10px;border-radius:50%}
+  .o1::after{background:var(--accent-2);box-shadow:0 0 14px 2px rgba(56,189,248,.8)}
+  .o2::after{background:var(--accent-warm);box-shadow:0 0 14px 2px rgba(232,121,249,.8)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .frame-offset{position:absolute;inset:0;z-index:1;transform:translate(18px,18px);border-radius:190px 190px 26px 26px;border:1.5px solid rgba(139,92,246,.6)}
+  .frame{position:absolute;inset:0;z-index:2;padding:3px;border-radius:190px 190px 26px 26px;background:var(--grad);box-shadow:0 30px 80px -20px rgba(139,92,246,.55)}
+  .frame-inner{position:relative;width:100%;height:100%;border-radius:187px 187px 23px 23px;overflow:hidden;background:#17123A}
+  .frame img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
+  .frame-inner::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,rgba(11,10,30,.6),transparent 38%),linear-gradient(135deg,rgba(139,92,246,.18),transparent 55%)}
+
+  .chip-float{position:absolute;z-index:3;padding:8px 14px;border-radius:999px;font-size:14px;color:var(--paper);
+    background:rgba(16,13,43,.72);backdrop-filter:blur(10px);border:1px solid var(--hairline);
+    box-shadow:0 10px 30px rgba(0,0,0,.35);animation:bob 6s ease-in-out infinite}
+  .chip-float i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--grad);margin-right:8px}
+  .chip-float.a{left:-34px;bottom:48px}
+  .chip-float.b{right:-22px;top:56px;animation-delay:-3s}
+  @keyframes bob{50%{transform:translateY(-8px)}}
+  @media(max-width:900px){.chip-float.a{left:-12px}.chip-float.b{right:-8px}}
+
+  /* lab */
+  .lab{background:var(--panel);border:1px solid var(--hairline);border-radius:18px;padding:22px;backdrop-filter:blur(8px)}
+  .lab-grid{display:grid;grid-template-columns:1fr 230px;gap:18px}
+  @media(max-width:820px){.lab-grid{grid-template-columns:1fr}}
+  canvas{width:100%;display:block;border-radius:10px;background:rgba(8,7,24,.6)}
+  #cv-trace{height:250px}#cv-phase{height:230px}
+  .cap{font-size:13px;color:var(--muted);margin:8px 2px 0}
+  .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:20px}
+  @media(max-width:720px){.controls{grid-template-columns:1fr}}
+  .ctl label{display:flex;justify-content:space-between;font-size:14.5px;color:var(--paper-dim);margin-bottom:6px}
+  .ctl output{color:var(--paper);font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .readout{margin-top:18px;padding:14px 16px;border-radius:10px;background:rgba(139,92,246,.10);border:1px solid rgba(139,92,246,.28);font-size:15.5px;display:flex;gap:12px;align-items:flex-start}
+  .readout i{flex:none;margin-top:8px;width:9px;height:9px;border-radius:50%;background:var(--accent)}
+  .readout.cont i{background:var(--accent-2)}.readout.quiet i{background:var(--muted)}.readout.burst i{background:var(--accent-warm)}
+  .note{font-size:13.5px;color:var(--muted);margin-top:14px;max-width:80ch}
+
+  /* numbers */
+  .numbers{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+  @media(max-width:760px){.numbers{grid-template-columns:repeat(2,1fr)}}
+  .num{padding:34px 22px 34px 0}
+  .num + .num{padding-left:26px;border-left:1px solid var(--hairline)}
+  @media(max-width:760px){.num:nth-child(3){padding-left:0;border-left:none}.num:nth-child(n+3){border-top:1px solid var(--hairline)}}
+  .num b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:clamp(38px,5vw,60px);line-height:1;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .num span{display:block;margin-top:10px;font-size:15px;color:var(--paper-dim)}
+
+  /* chapters */
+  .chapter{position:relative;display:grid;grid-template-columns:96px 1fr;gap:18px;padding:34px;margin-bottom:22px;border-radius:18px;border:1px solid var(--hairline);
+    background:radial-gradient(520px circle at var(--mx,50%) var(--my,0%),rgba(139,92,246,.15),transparent 45%),var(--panel)}
+  @media(max-width:640px){.chapter{grid-template-columns:1fr;padding:26px}}
+  .idx{font-family:'Fraunces',serif;font-size:56px;line-height:1;color:rgba(243,239,252,.18)}
+  .chapter h3{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(24px,3vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 6px}
+  .meta{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+  .chapter .tag{color:var(--paper);font-size:18px;margin-bottom:16px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+  .chip{border:1px solid var(--hairline);border-radius:999px;padding:5px 13px;font-size:14px;color:var(--paper-dim)}
+  details{margin-top:20px;border-top:1px solid var(--hairline);padding-top:6px}
+  summary{cursor:pointer;list-style:none;padding:12px 0;font-weight:500;display:flex;justify-content:space-between;color:var(--paper)}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:22px;line-height:1;color:var(--accent-2);transition:transform .25s}
+  details[open] summary::after{transform:rotate(45deg)}
+  details ul{margin:4px 0 6px;padding-left:20px;color:var(--paper-dim)}
+  details li{margin-bottom:9px;max-width:68ch}
+  details li b{color:var(--paper);font-weight:500}
+
+  /* timeline rows */
+  .row{display:grid;grid-template-columns:230px 1fr;gap:22px;padding:24px 0;border-top:1px solid var(--hairline)}
+  .row:last-child{border-bottom:1px solid var(--hairline)}
+  @media(max-width:640px){.row{grid-template-columns:1fr;gap:4px}}
+  .row h4{font-family:'Fraunces',serif;font-weight:500;font-size:19px;margin:0}
+  .row small{display:block;color:var(--muted);font-size:14px;margin-top:2px;font-family:'IBM Plex Sans',sans-serif}
+  .row p{color:var(--paper-dim);margin:0;max-width:66ch}
+
+  /* toolkit */
+  .toolkit{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:900px){.toolkit{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.toolkit{grid-template-columns:1fr}}
+  .tk{padding:26px;border:1px solid var(--hairline);border-radius:16px;background:var(--panel);transition:border-color .25s}
+  .tk:hover{border-color:rgba(139,92,246,.55)}
+  .tk .n{font-family:'Fraunces',serif;color:var(--accent-2);font-size:15px}
+  .tk h4{font-family:'Fraunces',serif;font-weight:500;font-size:21px;margin:4px 0 12px}
+  .tk ul{list-style:none;margin:0;padding:0;color:var(--paper-dim);font-size:15.5px}
+  .tk li{padding:3px 0}
+  .tk.hl{border-color:rgba(139,92,246,.45);background:linear-gradient(160deg,rgba(139,92,246,.16),var(--panel))}
+
+  /* contact */
+  .contact{text-align:left;padding:110px 0 80px}
+  .contact h2{font-size:clamp(36px,6vw,72px);max-width:16ch;line-height:1.02}
+  .links{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:30px}
+  footer{border-top:1px solid var(--hairline);padding:26px 0 44px;color:var(--muted);font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .js .reveal{opacity:1;transform:none;transition:none}
+    .orbit,.chip-float{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">P<span>A.</span></a>
+    <div class="nav-links">
+      <a href="#lab">The lab</a><a href="#work">Research</a><a href="#training">Training</a><a href="#toolkit">Toolkit</a>
+    </div>
+    <a class="pill" href="#contact">Let's talk</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="status reveal"><i></i>Open to PhD and research positions</div>
+      <h1 class="reveal">Systems that <em>burst</em>, lock, and refuse to settle.</h1>
+      <p class="lead reveal">I'm Pratyush, a researcher in nonlinear dynamics and scientific machine learning. I model chemically fueled oscillators, then teach neural networks to respect the physics that governs them.</p>
+      <div class="cta reveal">
+        <a class="pill solid" href="#work">See the research</a>
+        <a class="pill" href="CV_Pratyush_Aman.pdf">Download CV</a>
+      </div>
+    </div>
+
+    <figure class="portrait reveal">
+      <div class="orbit o1"></div>
+      <div class="orbit o2"></div>
+      <div class="frame-offset"></div>
+      <div class="frame">
+        <div class="frame-inner">
+          <img src="profile.jpg" alt="Portrait of Pratyush Aman" width="758" height="1280">
+        </div>
+      </div>
+      <span class="chip-float a"><i></i>IISER Thiruvananthapuram</span>
+      <span class="chip-float b"><i></i>Ac ∝ ω^0.61</span>
+    </figure>
+  </div>
+</header>
+
+<section id="lab" style="padding-top:60px">
+  <div class="wrap">
+    <h2 class="reveal">Drive the <em>system.</em></h2>
+    <p class="sub reveal">A tiny oscillator, live in your browser. Its stability parameter is pushed up and down by a slow forcing. Drag the sliders and watch it switch between silence, bursts, and continuous oscillation.</p>
+
+    <div class="lab reveal">
+      <div class="lab-grid">
+        <div>
+          <canvas id="cv-trace" aria-label="Time series of the oscillator with the forced stability parameter underneath"></canvas>
+          <p class="cap">Top: x(t). Bottom: the forced parameter μ(t); the oscillator is unstable only while μ is above zero.</p>
+        </div>
+        <div>
+          <canvas id="cv-phase" aria-label="Phase portrait of the oscillator"></canvas>
+          <p class="cap">Phase portrait (x, y)</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="ctl"><label for="s-mu">Mean parameter μ₀ <output id="o-mu"></output></label>
+          <input id="s-mu" type="range" min="-0.6" max="0.6" step="0.01" value="-0.15"></div>
+        <div class="ctl"><label for="s-a">Forcing amplitude A <output id="o-a"></output></label>
+          <input id="s-a" type="range" min="0" max="1" step="0.01" value="0.45"></div>
+        <div class="ctl"><label for="s-om">Forcing frequency Ω <output id="o-om"></output></label>
+          <input id="s-om" type="range" min="0.05" max="0.5" step="0.01" value="0.16"></div>
+      </div>
+
+      <div class="readout burst" id="readout" aria-live="polite"><i></i><span id="readout-text"></span></div>
+      <p class="note">This is an illustration: the Hopf normal form, dz/dt = (μ(t) + iω)z − |z|²z, with μ(t) = μ₀ + A·cos(Ωt) and a tiny noise floor. It shows the same mechanism as my thesis, a trajectory repeatedly crossing a Hopf boundary. It is not the thesis model.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding:30px 0 70px">
+  <div class="wrap">
+    <div class="numbers">
+      <div class="num reveal"><b data-to="4">0</b><span>dynamical systems used to benchmark my physics-informed models</span></div>
+      <div class="num reveal"><b data-to="0.61" data-dec="2">0</b><span>scaling exponent: critical forcing amplitude grows as ω^0.61</span></div>
+      <div class="num reveal"><b data-to="1.40" data-dec="2">0</b><span>burst enhancement ratio reached in the forced model</span></div>
+      <div class="num reveal"><b data-to="30">0</b><span>students selected for the COLD Winter School at IIT Madras</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="work" style="padding-top:40px">
+  <div class="wrap">
+    <h2 class="reveal">Research that <em>holds up</em> under pressure.</h2>
+    <p class="sub reveal">Three projects, one thread: understand how rhythmic systems switch behavior, then build models that don't lose that behavior.</p>
+
+    <article class="chapter reveal">
+      <div class="idx">01</div>
+      <div>
+        <h3>Burst oscillations in a periodically forced supramolecular system</h3>
+        <p class="meta">MS thesis · IISER Thiruvananthapuram · Aug 2025 to Jul 2026 · with Dr. Pushpita Ghosh</p>
+        <p class="tag">A fuel-driven polymerization model that bursts when you shake it at the right rate.</p>
+        <ul class="chips"><li class="chip">Hopf bifurcation</li><li class="chip">Slow–fast analysis</li><li class="chip">Arnold tongues</li><li class="chip">Mathematica</li><li class="chip">Python</li></ul>
+        <details>
+          <summary>Overview and results</summary>
+          <ul>
+            <li><b>Model reduction.</b> Reduced a four-variable kinetic model to three variables exactly, using a conservation law, and located its Hopf regimes with eigenvalue analysis.</li>
+            <li><b>Mechanism.</b> Periodic parametric forcing produces burst oscillations as the trajectory repeatedly crosses a Hopf boundary. Slow–fast analysis gives a burst threshold set by the rate constants rather than by the forcing.</li>
+            <li><b>Frequency locking.</b> Built Arnold tongue diagrams from Poincaré stroboscopic sections and mapped phase-locking structure, including a devil's staircase.</li>
+            <li><b>Analytics and space.</b> Derived the Hopf bifurcation surface analytically in Mathematica, then extended the model in space with periodic forcing and Gaussian noise to see pattern formation during assembly and disassembly.</li>
+            <li><b>Status.</b> Manuscript with Dr. Ghosh to be submitted October 2026.</li>
+          </ul>
+        </details>
+      </div>
+    </article>
+
+    <article class="chapter reveal">
+      <div class="idx">02</div>
+      <div>
+        <h3>Physics-informed ML that keeps its bifurcations</h3>
+        <p class="meta">Scientific machine learning · self-initiated · Sep 2026 to present</p>
+        <p class="tag">Neural networks that learn dynamics without forgetting where the dynamics change.</p>
+        <ul class="chips"><li class="chip">FiLM conditioning</li><li class="chip">Physical constraints</li><li class="chip">Lyapunov exponents</li><li class="chip">Ablation studies</li><li class="chip">PyTorch</li></ul>
+        <details>
+          <summary>Overview and results</summary>
+          <ul>
+            <li><b>Framework.</b> FiLM-conditioned neural networks trained under physical constraints.</li>
+            <li><b>Benchmarks.</b> Van der Pol, FitzHugh–Nagumo, Lorenz, and the chemically fueled supramolecular oscillator from my thesis.</li>
+            <li><b>Outcome.</b> Compared with unconstrained neural baselines: better bifurcation accuracy, more stable long-horizon rollouts, closer conservation, and better out-of-distribution generalization.</li>
+            <li><b>Validation.</b> Jacobian and eigenvalue analysis, Lyapunov exponents, invariant measures, uncertainty quantification, and capacity and ablation studies.</li>
+            <li><a href="https://github.com/your-username/your-sciml-repo">Code and reproducibility on GitHub</a></li>
+          </ul>
+        </details>
+      </div>
+    </article>
+
+    <article class="chapter reveal">
+      <div class="idx">03</div>
+      <div>
+        <h3>Graph neural networks you can read atom by atom</h3>
+        <p class="meta">Molecular property prediction · self-initiated</p>
+        <p class="tag">Solubility and logP predictions that point to the atoms responsible.</p>
+        <ul class="chips"><li class="chip">PyTorch Geometric</li><li class="chip">RDKit</li><li class="chip">Attention</li><li class="chip">Interpretability</li></ul>
+        <details>
+          <summary>Overview and results</summary>
+          <ul>
+            <li>Built graph neural networks that predict solubility and logP for small molecules directly from molecular graphs.</li>
+            <li>Added atom-level attention so each prediction can be traced to individual atoms instead of being a black box.</li>
+          </ul>
+        </details>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="training" style="padding-top:40px">
+  <div class="wrap">
+    <h2 class="reveal">Where I've <em>trained.</em></h2>
+    <p class="sub reveal">Computational chemistry foundations, then a steady move toward dynamics and machine learning.</p>
+    <div>
+      <div class="row reveal"><h4>IISER Thiruvananthapuram<small>BS-MS Interdisciplinary Chemistry · 2021 to 2026</small></h4><p>Coursework in quantum chemistry, chemical kinetics, computational chemistry, and computational chemical biology. MD simulations of a GB1 hairpin, a polymer, and membranes; CHARMM-GUI setup, docking, and structure prediction with AlphaFold, I-TASSER and RoseTTAFold.</p></div>
+      <div class="row reveal"><h4>IIT Hyderabad<small>DFT intern · May to Jul 2024</small></h4><p>Geometry optimization and electronic structure analysis of H₂O, H₃O⁺ and transition metal complexes in Gaussian, with Dr. Debasis Koner.</p></div>
+      <div class="row reveal"><h4>IIT Madras<small>Molecular simulation intern · Winter 2024</small></h4><p>Python implementation of molecular energy calculations and analysis of Lennard–Jones potentials, with Dr. Raghunathan Rengaswamy.</p></div>
+      <div class="row reveal"><h4>COLD Winter School 2026<small>IIT Madras</small></h4><p>Complexity, Optimisation, Learning, and Dynamics, at the Centre for Complex Systems and Dynamics. Selected competitively among 30 students.</p></div>
+      <div class="row reveal"><h4>CNSD 2026<small>IISER Thiruvananthapuram</small></h4><p>Participant, International Conference on Nonlinear Systems and Dynamics.</p></div>
+      <div class="row reveal"><h4>Anvesha 2022 and 2023<small>IISER Thiruvananthapuram</small></h4><p>Talks on Lagrange points and space-time curvature, and on astrochemistry, XPS and chemical curvature.</p></div>
+      <div class="row reveal"><h4>Certifications<small>Sep 2026</small></h4><p>Claude Code in Action, and Claude with the Anthropic API (Anthropic).</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="toolkit" style="padding-top:40px">
+  <div class="wrap">
+    <h2 class="reveal">The <em>toolkit.</em></h2>
+    <p class="sub reveal">Tools matter less than whether the model still behaves when the physics gets difficult.</p>
+    <div class="toolkit">
+      <div class="tk hl reveal"><span class="n">01</span><h4>Scientific ML</h4><ul><li>Physics-informed learning</li><li>FiLM conditioning</li><li>Constraint enforcement</li><li>Graph neural networks</li><li>Uncertainty quantification</li><li>Ablation and OOD studies</li></ul></div>
+      <div class="tk hl reveal"><span class="n">02</span><h4>Dynamical systems</h4><ul><li>Bifurcation analysis</li><li>Slow–fast methods</li><li>Arnold tongues</li><li>Poincaré sections</li><li>Lyapunov exponents</li><li>ODE and PDE simulation</li></ul></div>
+      <div class="tk reveal"><span class="n">03</span><h4>Languages and libraries</h4><ul><li>Python (NumPy, SciPy, Pandas, Matplotlib)</li><li>PyTorch, PyTorch Geometric</li><li>TensorFlow, scikit-learn</li><li>Mathematica, C++, Bash</li></ul></div>
+      <div class="tk reveal"><span class="n">04</span><h4>Computational chemistry</h4><ul><li>Gaussian, ORCA</li><li>GROMACS, VMD</li><li>CHARMM-GUI</li><li>RDKit</li></ul></div>
+      <div class="tk reveal"><span class="n">05</span><h4>Workflow</h4><ul><li>Git and GitHub</li><li>Jupyter</li><li>Linux and Unix</li><li>LaTeX and Overleaf</li><li>OriginLab</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2 class="reveal">Bring me a system that <em>won't sit still.</em></h2>
+    <p class="sub reveal" style="margin-bottom:0">I'm looking for PhD and research work where nonlinear dynamics and machine learning meet real physical systems.</p>
+    <div class="links reveal">
+      <a class="pill solid" href="mailto:pratyushaman24@gmail.com">Email me</a>
+      <a class="pill" href="https://github.com/your-username">GitHub</a>
+      <a class="pill" href="https://www.linkedin.com/in/your-linkedin">LinkedIn</a>
+      <a class="pill" href="CV_Pratyush_Aman.pdf">CV (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Pratyush Aman</span><a href="#top">Back to top</a></div></footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* reveal on scroll */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* count-up numbers */
+  var cio = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el=e.target, to=parseFloat(el.dataset.to), dec=parseInt(el.dataset.dec||0,10);
+      cio.unobserve(el);
+      if(reduce){ el.textContent=to.toFixed(dec); return; }
+      var t0=performance.now();
+      (function tick(t){
+        var p=Math.min(1,(t-t0)/1200), k=1-Math.pow(1-p,3);
+        el.textContent=(to*k).toFixed(dec);
+        if(p<1) requestAnimationFrame(tick);
+      })(t0);
+    });
+  },{threshold:.6});
+  document.querySelectorAll('.num b').forEach(function(el){ cio.observe(el); });
+
+  /* spotlight on chapter cards */
+  document.querySelectorAll('.chapter').forEach(function(c){
+    c.addEventListener('mousemove',function(e){
+      var r=c.getBoundingClientRect();
+      c.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      c.style.setProperty('--my',(e.clientY-r.top)+'px');
+    });
+  });
+
+  /* ---------- live oscillator lab ---------- */
+  var cvT=document.getElementById('cv-trace'), cvP=document.getElementById('cv-phase');
+  var cT=cvT.getContext('2d'), cP=cvP.getContext('2d');
+  var N=1000, xs=new Float32Array(N), ys=new Float32Array(N), ms=new Float32Array(N);
+  var head=0, tick=0, OM=6, DT=0.01;
+  var st={x:0.05,y:0,t:0};
+  var p={mu0:-0.15,A:0.45,Om:0.16};
+
+  function mu(t){ return p.mu0 + p.A*Math.cos(p.Om*t); }
+  function rhs(t,x,y){ var m=mu(t), r=x*x+y*y; return [m*x-OM*y-r*x, OM*x+m*y-r*y]; }
+  function rk4(){
+    var t=st.t,x=st.x,y=st.y,h=DT;
+    var k1=rhs(t,x,y);
+    var k2=rhs(t+h/2,x+h/2*k1[0],y+h/2*k1[1]);
+    var k3=rhs(t+h/2,x+h/2*k2[0],y+h/2*k2[1]);
+    var k4=rhs(t+h,x+h*k3[0],y+h*k3[1]);
+    st.x=x+h/6*(k1[0]+2*k2[0]+2*k3[0]+k4[0]);
+    st.y=y+h/6*(k1[1]+2*k2[1]+2*k3[1]+k4[1]);
+    st.t=t+h;
+    var r=Math.sqrt(st.x*st.x+st.y*st.y);
+    if(r<1e-3){ if(r===0){st.x=1e-3;} else {var s=1e-3/r; st.x*=s; st.y*=s;} } /* noise floor */
+    if(++tick%4===0){ head=(head+1)%N; xs[head]=st.x; ys[head]=st.y; ms[head]=mu(st.t); }
+  }
+  function advance(n){ for(var i=0;i<n;i++) rk4(); }
+
+  var W=0,H=0,PW=0,PH=0;
+  function fit(cv,ctx){
+    var d=window.devicePixelRatio||1, w=cv.clientWidth, h=cv.clientHeight;
+    cv.width=w*d; cv.height=h*d; ctx.setTransform(d,0,0,d,0,0); return [w,h];
+  }
+  function resize(){ var a=fit(cvT,cT), b=fit(cvP,cP); W=a[0];H=a[1];PW=b[0];PH=b[1]; draw(); }
+
+  function draw(){
+    if(!W) return;
+    cT.clearRect(0,0,W,H);
+    var hx=H*0.70, cy=hx/2, sy=(hx/2)*0.88/1.5;
+    var zeroY=H*0.74+(H*0.26)/2, sm=(H*0.24/2)/1.2;
+    /* mu shading + zero line */
+    for(var i=0;i<N;i++){
+      var idx=(head+1+i)%N, m=ms[idx];
+      if(m>0){ var px=i/(N-1)*W; cT.fillStyle='rgba(139,92,246,.22)'; cT.fillRect(px,zeroY-m*sm,W/N+1,m*sm); }
+    }
+    cT.strokeStyle='rgba(243,239,252,.25)'; cT.setLineDash([4,5]); cT.beginPath(); cT.moveTo(0,zeroY); cT.lineTo(W,zeroY); cT.stroke(); cT.setLineDash([]);
+    cT.strokeStyle='#E879F9'; cT.lineWidth=1.5; cT.beginPath();
+    for(i=0;i<N;i++){ idx=(head+1+i)%N; var xx=i/(N-1)*W, yy=zeroY-ms[idx]*sm; if(i===0) cT.moveTo(xx,yy); else cT.lineTo(xx,yy); }
+    cT.stroke();
+    /* x(t) */
+    var g=cT.createLinearGradient(0,0,W,0); g.addColorStop(0,'#38BDF8'); g.addColorStop(.6,'#8B5CF6'); g.addColorStop(1,'#E879F9');
+    cT.strokeStyle=g; cT.lineWidth=1.6; cT.beginPath();
+    for(i=0;i<N;i++){ idx=(head+1+i)%N; xx=i/(N-1)*W; yy=cy-xs[idx]*sy; if(i===0) cT.moveTo(xx,yy); else cT.lineTo(xx,yy); }
+    cT.stroke();
+
+    /* phase portrait */
+    cP.clearRect(0,0,PW,PH);
+    var s=Math.min(PW,PH)/2/1.55, ox=PW/2, oy=PH/2;
+    cP.strokeStyle='rgba(243,239,252,.12)'; cP.lineWidth=1; cP.beginPath();
+    cP.moveTo(0,oy); cP.lineTo(PW,oy); cP.moveTo(ox,0); cP.lineTo(ox,PH); cP.stroke();
+    var M=260;
+    for(i=1;i<M;i++){
+      var a=(head-M+i+N)%N, b=(head-M+i+1+N)%N;
+      cP.strokeStyle='rgba(139,92,246,'+(i/M*0.95).toFixed(3)+')'; cP.lineWidth=1.6;
+      cP.beginPath(); cP.moveTo(ox+xs[a]*s,oy-ys[a]*s); cP.lineTo(ox+xs[b]*s,oy-ys[b]*s); cP.stroke();
+    }
+    cP.fillStyle='#38BDF8'; cP.beginPath(); cP.arc(ox+xs[head]*s,oy-ys[head]*s,3.5,0,6.283); cP.fill();
+  }
+
+  function settle(){ advance(16000); }
+
+  /* controls */
+  var $=function(id){return document.getElementById(id)};
+  function status(){
+    var m0=p.mu0, A=p.A, box=$('readout'), txt=$('readout-text');
+    if(m0-A>=0){ box.className='readout cont'; txt.textContent='Continuous oscillation. Even at its lowest, the parameter stays on the unstable side of the Hopf boundary.'; }
+    else if(m0+A<=0){ box.className='readout quiet'; txt.textContent='Quiescent. The forcing never reaches the Hopf boundary, so every oscillation decays away.'; }
+    else { var f=Math.round(Math.acos(-m0/A)/Math.PI*100); box.className='readout burst'; txt.textContent='Bursting. The parameter crosses the Hopf boundary every cycle and spends about '+f+'% of each cycle on the unstable side.'; }
+  }
+  function sync(){
+    p.mu0=parseFloat($('s-mu').value); p.A=parseFloat($('s-a').value); p.Om=parseFloat($('s-om').value);
+    $('o-mu').textContent=p.mu0.toFixed(2); $('o-a').textContent=p.A.toFixed(2); $('o-om').textContent=p.Om.toFixed(2);
+    status();
+    if(reduce){ settle(); draw(); }
+  }
+  ['s-mu','s-a','s-om'].forEach(function(id){ $(id).addEventListener('input',sync); });
+
+  /* run loop, paused when off-screen */
+  var visible=true;
+  new IntersectionObserver(function(es){ visible=es[0].isIntersecting; if(visible&&!reduce) loop(); },{threshold:0}).observe($('lab'));
+  var running=false;
+  function loop(){
+    if(running) return; running=true;
+    (function frame(){
+      if(!visible){ running=false; return; }
+      advance(12); draw(); requestAnimationFrame(frame);
+    })();
+  }
+
+  sync(); settle(); resize();
+  window.addEventListener('resize',resize);
+  if(!reduce) loop();
+})();
+</script>
+</body>
+</html>
